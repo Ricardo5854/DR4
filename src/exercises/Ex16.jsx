@@ -18,7 +18,8 @@ export default function Ex16() {
     fetch(`https://servicodados.ibge.gov.br/api/v2/censos/nomes/ranking/?decada=${d}`)
       .then(r => r.json())
       .then(data => {
-        setRanking(data)
+        const list = Array.isArray(data) ? data : []
+        setRanking(list)
         setLoading(false)
       })
       .catch(() => {
@@ -49,13 +50,13 @@ export default function Ex16() {
         <div className="rank-box">
           <div className="rank-header">Ranking — Década de {decade}</div>
           {ranking.map((item, i) => (
-            <div key={i} className="rank-item">
-              <div className="rank-num">{item.ranking}</div>
-              <span style={{ flex: 1, fontWeight: 500 }}>{item.nome}</span>
+            <div key={i} className="rank-row">
+              <div className="rank-pos">{item.ranking ?? i + 1}</div>
+              <span className="rank-name">{item.nome ?? '—'}</span>
               <span className={`badge ${item.sexo === 'M' ? 'badge-m' : 'badge-f'}`}>
                 {item.sexo === 'M' ? '♂ Masc' : '♀ Fem'}
               </span>
-              <span className="muted" style={{ minWidth: 80, textAlign: 'right' }}>
+              <span className="rank-freq">
                 {(item.res?.[0]?.frequencia ?? 0).toLocaleString('pt-BR')}
               </span>
             </div>
